@@ -66,7 +66,7 @@ def read_recipe(db: Session = Depends(get_db)):
     return recipe.read_all(db)
 
 
-@app.get("/recipe/{order_id}", response_model=schemas.Recipe, tags=["recipe"])
+@app.get("/recipe/{recipe_id}", response_model=schemas.Recipe, tags=["recipe"])
 def read_one_recipe(recipe_id: int, db: Session = Depends(get_db)):
     recipe = recipe.read_one(db, recipe_id=recipe_id)
     if recipe is None:
@@ -102,7 +102,7 @@ def read_sandwich(db: Session = Depends(get_db)):
     return sandwich.read_all(db)
 
 
-@app.get("/sandwich/{order_id}", response_model=schemas.Sandwich, tags=["sandwich"])
+@app.get("/sandwich/{sandiwch_id}", response_model=schemas.Sandwich, tags=["sandwich"])
 def read_one_sandwich(sandwich_id: int, db: Session = Depends(get_db)):
     sandwich = sandwich.read_one(db, sandwich_id=sandwich_id)
     if sandwich is None:
@@ -138,7 +138,7 @@ def read_resource(db: Session = Depends(get_db)):
     return resource.read_all(db)
 
 
-@app.get("/resource/{order_id}", response_model=schemas.Resource, tags=["resource"])
+@app.get("/resource/{resource_id}", response_model=schemas.Resource, tags=["resource"])
 def read_one_resource(resource_id: int, db: Session = Depends(get_db)):
     resource = resource.read_one(db, resource_id=resource_id)
     if resource is None:
