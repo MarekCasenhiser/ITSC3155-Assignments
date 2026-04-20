@@ -25,3 +25,29 @@ async def create_todo(todo: TodoBase, db: db_dependency):
     db.add(db_todo)
     db.commit()
     return {"detail": "Todo added successfully"}
+
+@app.get("/todos/", status_code=status.HTTP_200_OK)
+async def get_todos(db:db_dependency):
+    return db.query(models.Todo).all()
+
+@app.put('/todos/{todo_id}', response_model=TodoBase, status_code=status.HTTP_200_OK)
+async def update_todo(todo_id: int, todo_request: TodoBase, db: db_dependency):
+    db_todo = db.query(models.Todo).filter(models.Todo.id == todo_id)
+    if db_todo.first() is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found')
+    update_data = todo_request.model_dump(exclude_unset=True)
+    # Update the database record with the new data
+    db_todo.update(update_data, synchronize_session=False)
+    db.commit()
+    return db_todo.first()
+
+@app.delete('/todos/{todo_id}', response_model=TodoBase, status_code=status.HTTP_200_OK)
+async def delete_todo(todo_id: int, todo_request: TodoBase, db: db_dependency):
+    db_todo = db.query(models.Todo).filter(models.Todo.id == todo_id)
+    if db_todo.first() is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found')
+    delete_data = todo_request.model_dump(exclude_unset=True)
+    # Update the database record with the new data
+    db_todo.delete(delete_data, synchronize_session=False)
+    db.commit()
+    return db_todo.first()
